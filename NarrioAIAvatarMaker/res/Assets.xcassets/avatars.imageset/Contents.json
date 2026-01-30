@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "avatars.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
