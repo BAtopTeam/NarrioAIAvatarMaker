@@ -55,7 +55,7 @@ struct ProjectsView: View {
                             SearchBar(text: $searchText, placeholder: "Search projects...")
                         }
                         .padding(.horizontal, AppSpacing.lg)
-                        .padding(.top, AppSpacing.md)
+                        .padding(.vertical, AppSpacing.md)
                     } else {
                         HStack {
                             SearchBar(text: $searchText, placeholder: "Search projects...")
@@ -64,7 +64,7 @@ struct ProjectsView: View {
                                 }
                         }
                         .padding(.horizontal, AppSpacing.lg)
-                        .padding(.top, AppSpacing.md)
+                        .padding(.vertical, AppSpacing.md)
                     }
                     
                     ScrollView {
