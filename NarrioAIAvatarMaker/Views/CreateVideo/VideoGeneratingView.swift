@@ -205,7 +205,7 @@ struct VideoGeneratingView: View {
             
             VStack(spacing: AppSpacing.md) {
                 PrimaryButton(title: "Try Again") {
-//                    instance.retry()
+                    instance.retry()
                 }
                 
                 SecondaryButton(title: "Go Back") {

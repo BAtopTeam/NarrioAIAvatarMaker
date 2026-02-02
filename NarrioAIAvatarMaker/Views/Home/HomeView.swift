@@ -120,7 +120,7 @@ struct HomeView: View {
                 GridItem(.flexible(), spacing: AppSpacing.md),
                 GridItem(.flexible(), spacing: AppSpacing.md)
             ], spacing: AppSpacing.md) {
-                ForEach(VideoTemplate.templates) { template in
+                ForEach(appState.templates) { template in
                     TemplateCard(template: template) {
                         createVideoFlow.open(template: template, startStep: .preview)
                     }
@@ -247,18 +247,47 @@ struct TemplateCard: View {
                 if !template.avatar.thumbnailURL.isEmpty,
                    let url = URL(string: template.avatar.thumbnailURL) {
                     ZStack {
-                        CachedAsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                                .cornerRadius(AppRadius.medium)
-                        } placeholder: {
-                            Color.black.opacity(0.2)
+                        RoundedRectangle(cornerRadius: AppRadius.medium)
+                            .fill(
+                                LinearGradient(
+                                    colors: [AppColors.primary.opacity(0.2), AppColors.accent.opacity(0.3)],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .frame(width: 172, height: 113)
+                        AsyncImage(url: url) { phase in
+                            switch phase {
+                            case .empty:
+                                ProgressView()
+                                    .frame(width: 100, height: 100)
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .cornerRadius(AppRadius.medium)
+                                    .clipped()
+                                    .frame(width: 172, height: 113)
+                            case .failure:
+                                RoundedRectangle(cornerRadius: AppRadius.medium)
+                                    .fill(LinearGradient(
+                                        colors: [AppColors.primary.opacity(0.4), AppColors.accent.opacity(0.6)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ))
+                                    .frame(height: 113)
+                            @unknown default:
+                                RoundedRectangle(cornerRadius: AppRadius.medium)
+                                    .fill(LinearGradient(
+                                        colors: [AppColors.primary.opacity(0.4), AppColors.accent.opacity(0.6)],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    ))
+                                    .frame(height: 113)
+                            }
                         }
-                        .frame(height: 100)
-                        .clipped()
-                        .background(.blue)
-                        .cornerRadius(AppRadius.medium)
+                        .frame(width: 172, height: 113)
+                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.medium))
                     }
                 } else {
                     RoundedRectangle(cornerRadius: AppRadius.medium)
@@ -267,7 +296,7 @@ struct TemplateCard: View {
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ))
-                        .frame(height: 100)
+                        .frame(height: 113)
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -293,6 +322,7 @@ struct TemplateCard: View {
                 }
                 .padding(AppSpacing.md)
             }
+            .frame(height: 113)
         }
     }
 }

@@ -22,6 +22,7 @@ class AppState: ObservableObject {
     @Published var isShowingPaywall = false
     @Published var selectedAvatar: Avatar? = nil
     @Published var showRatingView = false
+    @Published var templates: [VideoTemplate] = []
     
     private var didShowRatingThisSession = false
     
@@ -93,6 +94,7 @@ class AppState: ObservableObject {
         loadLocalData()
         Task {
             await loadInitialData()
+            await makePresets()
         }
     }
     
@@ -102,6 +104,42 @@ class AppState: ObservableObject {
         didShowRatingThisSession = true
         showRatingView = true
     }
+    
+    @MainActor
+    func makePresets() async {
+        guard !presetAvatars.isEmpty, !apiVoices.isEmpty else {
+            print("⚠️ Avatars or voices are empty")
+            templates = []
+            return
+        }
+
+        let baseTemplates = VideoTemplateBase.templates
+
+        var result: [VideoTemplate] = []
+
+        for (index, base) in baseTemplates.enumerated() {
+            let avatar = presetAvatars[index % presetAvatars.count]
+
+            let voice = apiVoices[index % apiVoices.count]
+
+            let template = VideoTemplate(
+                id: base.id,
+                title: base.title,
+                category: base.category,
+                duration: base.duration,
+                thumbnailURL: base.thumbnailURL,
+                script: base.script,
+                avatar: avatar,
+                voice: voice,
+                background: base.background
+            )
+
+            result.append(template)
+        }
+
+        templates = result
+    }
+
     
     @MainActor
     func setup(videoGenerationManager: VideoGenerationManager) {

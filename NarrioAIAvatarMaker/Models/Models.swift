@@ -298,21 +298,17 @@ enum ProjectStatus: String, Codable, CaseIterable {
 }
 
 // MARK: - Video Template
-
-struct VideoTemplate: Identifiable {
+struct VideoTemplateBase {
     let id: UUID
-    var title: String
-    var category: String
-    var duration: String
-    var thumbnailURL: String
-
-    var script: String
-    var avatar: Avatar
-    var voice: Voice
-    var background: Background
-
-    static let templates: [VideoTemplate] = [
-        VideoTemplate(
+    let title: String
+    let category: String
+    let duration: String
+    let thumbnailURL: String
+    let script: String
+    let background: Background
+    
+    static let templates: [VideoTemplateBase] = [
+        VideoTemplateBase(
             id: UUID(),
             title: "Marketing Intro",
             category: "Marketing",
@@ -328,24 +324,6 @@ struct VideoTemplate: Identifiable {
             By the end of this video, you’ll have a clear understanding of how to integrate this product into your daily operations, \
             unlocking its full potential and achieving remarkable outcomes.
             """,
-            avatar: Avatar(
-                id: UUID(),
-                name: "Vince Sofa Casual Side",
-                imageURL: "https://files2.heygen.ai/avatar/v3/1af844a83c5f45698fac330aec8487b5_38870/preview_target.webp",
-                thumbnailURL: "https://files2.heygen.ai/avatar/v3/1af844a83c5f45698fac330aec8487b5_38870/preview_target.webp",
-                gender: .male,
-                style: .formal,
-                isCustom: false,
-                createdAt: Date(),
-                heygenAvatarId: "Vince_sitting_sofacasual_side"
-            ),
-            voice: Voice(
-                id: "f8c69e517f424cafaecde32dde57096b",
-                name: "Emma",
-                gender: .female,
-                accent: "US English",
-                heygenVoiceId: "f8c69e517f424cafaecde32dde57096b"
-            ),
             background: Background(
                 id: UUID(),
                 name: "Gradient Blue",
@@ -353,7 +331,7 @@ struct VideoTemplate: Identifiable {
                 colors: [Color(hex: "667eea"), Color(hex: "764ba2")]
             )
         ),
-        VideoTemplate(
+        VideoTemplateBase(
             id: UUID(),
             title: "Product Demo",
             category: "Product",
@@ -371,24 +349,6 @@ struct VideoTemplate: Identifiable {
             ensuring that your team can implement this solution seamlessly. \
             By the end of this demo, you’ll be confident in using the product for daily tasks and achieving results faster than ever before.
             """,
-            avatar: Avatar(
-                id: UUID(),
-                name: "Violante Brown Suit Front 2",
-                imageURL: "https://files2.heygen.ai/avatar/v3/995711537c174575901529c0c235a061_38890/preview_talk_1.webp",
-                thumbnailURL: "https://files2.heygen.ai/avatar/v3/995711537c174575901529c0c235a061_38890/preview_talk_1.webp",
-                gender: .male,
-                style: .casual,
-                isCustom: false,
-                createdAt: Date(),
-                heygenAvatarId: "Vince_standing_sofacasual_front"
-            ),
-            voice: Voice(
-                id: "f8c69e517f424cafaecde32dde57096b",
-                name: "John",
-                gender: .male,
-                accent: "US English",
-                heygenVoiceId: "f8c69e517f424cafaecde32dde57096b"
-            ),
             background: Background(
                 id: UUID(),
                 name: "Light Grey",
@@ -396,7 +356,7 @@ struct VideoTemplate: Identifiable {
                 colors: [Color(hex: "f5f5f5")]
             )
         ),
-        VideoTemplate(
+        VideoTemplateBase(
             id: UUID(),
             title: "Tutorial",
             category: "Education",
@@ -414,24 +374,6 @@ struct VideoTemplate: Identifiable {
             You’ll also learn how to incorporate branding elements, music, and subtitles to make your tutorial more professional. \
             By following these steps thoroughly, you’ll create polished, professional videos that leave a lasting impression and can be reused for multiple purposes.
             """,
-            avatar: Avatar(
-                id: UUID(),
-                name: "Verena Office Front",
-                imageURL: "https://files2.heygen.ai/avatar/v3/392967d6c52642a4968a8dd82572bd6c_37130/preview_target.webp",
-                thumbnailURL: "https://files2.heygen.ai/avatar/v3/392967d6c52642a4968a8dd82572bd6c_37130/preview_target.webp",
-                gender: .female,
-                style: .formal,
-                isCustom: false,
-                createdAt: Date(),
-                heygenAvatarId: "Verena_standing_office_front"
-            ),
-            voice: Voice(
-                id: "tzGLEmt4bNwQqt9EWLLy",
-                name: "Olivia",
-                gender: .female,
-                accent: "US English",
-                heygenVoiceId: "tzGLEmt4bNwQqt9EWLLy"
-            ),
             background: Background(
                 id: UUID(),
                 name: "Gradient Green",
@@ -439,7 +381,7 @@ struct VideoTemplate: Identifiable {
                 colors: [Color(hex: "4facfe"), Color(hex: "00f2fe")]
             )
         ),
-        VideoTemplate(
+        VideoTemplateBase(
             id: UUID(),
             title: "Sales Pitch",
             category: "Sales",
@@ -454,24 +396,6 @@ struct VideoTemplate: Identifiable {
             You’ll discover practical examples of implementing our solution in different industries and the measurable impact it brings. \
             By the end of this pitch, you’ll have a complete understanding of how to maximize ROI and achieve rapid growth for your business.
             """,
-            avatar: Avatar(
-                id: UUID(),
-                name: "Verena Sofa Side",
-                imageURL: "https://files2.heygen.ai/avatar/v3/077686d2d0d14d8c8a01321479017229_37220/preview_target.webp",
-                thumbnailURL: "https://files2.heygen.ai/avatar/v3/077686d2d0d14d8c8a01321479017229_37220/preview_target.webp",
-                gender: .female,
-                style: .formal,
-                isCustom: false,
-                createdAt: Date(),
-                heygenAvatarId: "Verena_sitting_sofa_side"
-            ),
-            voice: Voice(
-                id: "tzGLEmt4bNwQqt9EWLLy",
-                name: "Sophia",
-                gender: .female,
-                accent: "US English",
-                heygenVoiceId: "tzGLEmt4bNwQqt9EWLLy"
-            ),
             background: Background(
                 id: UUID(),
                 name: "Gradient Orange",
@@ -479,7 +403,7 @@ struct VideoTemplate: Identifiable {
                 colors: [Color(hex: "fa709a"), Color(hex: "fee140")]
             )
         ),
-        VideoTemplate(
+        VideoTemplateBase(
             id: UUID(),
             title: "Evening Insights",
             category: "Lifestyle",
@@ -491,24 +415,6 @@ struct VideoTemplate: Identifiable {
             Discover how small adjustments can bring balance, clarity, and joy to your evenings. \
             By the end of this video, you’ll have actionable strategies to unwind, recharge, and prepare for a successful tomorrow.
             """,
-            avatar: Avatar(
-                id: UUID(),
-                name: "Aubrey Night Scene Front",
-                imageURL: "https://files2.heygen.ai/avatar/v3/33fda333525e41b4bbff63fe17169507_39530/preview_target.webp",
-                thumbnailURL: "https://files2.heygen.ai/avatar/v3/33fda333525e41b4bbff63fe17169507_39530/preview_target.webp",
-                gender: .female,
-                style: .formal,
-                isCustom: false,
-                createdAt: Date(),
-                heygenAvatarId: "Aubrey_standing_night_scene_front"
-            ),
-            voice: Voice(
-                id: "f8c69e517f424cafaecde32dde57096b",
-                name: "Emma",
-                gender: .female,
-                accent: "US English",
-                heygenVoiceId: "f8c69e517f424cafaecde32dde57096b"
-            ),
             background: Background(
                 id: UUID(),
                 name: "Dark Blue",
@@ -517,7 +423,7 @@ struct VideoTemplate: Identifiable {
             )
         ),
 
-        VideoTemplate(
+        VideoTemplateBase(
             id: UUID(),
             title: "Outdoor Fitness Tips",
             category: "Health",
@@ -528,24 +434,6 @@ struct VideoTemplate: Identifiable {
             for maximizing fitness while enjoying nature. Stay motivated, improve your endurance, and achieve your goals efficiently. \
             Learn how to combine cardio, strength, and flexibility routines in just minutes a day.
             """,
-            avatar: Avatar(
-                id: UUID(),
-                name: "Aubrey Outdoor Sport Front",
-                imageURL: "https://files2.heygen.ai/avatar/v3/c4745b302cb848b7a9352ece1a6d1211_39400/preview_target.webp",
-                thumbnailURL: "https://files2.heygen.ai/avatar/v3/c4745b302cb848b7a9352ece1a6d1211_39400/preview_target.webp",
-                gender: .female,
-                style: .formal,
-                isCustom: false,
-                createdAt: Date(),
-                heygenAvatarId: "Aubrey_standing_outdoor_sport_front"
-            ),
-            voice: Voice(
-                id: "tzGLEmt4bNwQqt9EWLLy",
-                name: "John",
-                gender: .male,
-                accent: "US English",
-                heygenVoiceId: "tzGLEmt4bNwQqt9EWLLy"
-            ),
             background: Background(
                 id: UUID(),
                 name: "Green Field",
@@ -554,7 +442,7 @@ struct VideoTemplate: Identifiable {
             )
         ),
 
-        VideoTemplate(
+        VideoTemplateBase(
             id: UUID(),
             title: "Business Strategy Overview",
             category: "Business",
@@ -565,24 +453,6 @@ struct VideoTemplate: Identifiable {
             to grow your company, optimize processes, and improve team performance. \
             Learn from real-life case studies and discover techniques used by top companies to achieve scalable success.
             """,
-            avatar: Avatar(
-                id: UUID(),
-                name: "Blanka Outdoor Business Fron",
-                imageURL: "https://files2.heygen.ai/avatar/v3/4df6714eaf9c41659b064af419016c9d_38350/preview_target.webp",
-                thumbnailURL: "https://files2.heygen.ai/avatar/v3/4df6714eaf9c41659b064af419016c9d_38350/preview_target.webp",
-                gender: .female,
-                style: .formal,
-                isCustom: false,
-                createdAt: Date(),
-                heygenAvatarId: "Blanka_standing_outfoorbusiness_front"
-            ),
-            voice: Voice(
-                id: "tzGLEmt4bNwQqt9EWLLy",
-                name: "Sophia",
-                gender: .female,
-                accent: "US English",
-                heygenVoiceId: "tzGLEmt4bNwQqt9EWLLy"
-            ),
             background: Background(
                 id: UUID(),
                 name: "Office Blue",
@@ -591,7 +461,7 @@ struct VideoTemplate: Identifiable {
             )
         ),
 
-        VideoTemplate(
+        VideoTemplateBase(
             id: UUID(),
             title: "Casual Tech Review",
             category: "Tech",
@@ -602,24 +472,6 @@ struct VideoTemplate: Identifiable {
             From smartphones to smart home devices, get a quick overview of their features, pros, and cons. \
             By the end, you’ll have the knowledge to choose what fits your lifestyle best.
             """,
-            avatar: Avatar(
-                id: UUID(),
-                name: "Aubrey Outdoor Sport Side",
-                imageURL: "https://files2.heygen.ai/avatar/v3/e18ecbc69acb465b905beb42597496dc_39500/preview_target.webp",
-                thumbnailURL: "https://files2.heygen.ai/avatar/v3/e18ecbc69acb465b905beb42597496dc_39500/preview_target.webp",
-                gender: .male,
-                style: .formal,
-                isCustom: false,
-                createdAt: Date(),
-                heygenAvatarId: "Aubrey_standing_outdoor_sport_side"
-            ),
-            voice: Voice(
-                id: "f8c69e517f424cafaecde32dde57096b",
-                name: "Emma",
-                gender: .female,
-                accent: "US English",
-                heygenVoiceId: "f8c69e517f424cafaecde32dde57096b"
-            ),
             background: Background(
                 id: UUID(),
                 name: "Tech Grey",
@@ -627,8 +479,20 @@ struct VideoTemplate: Identifiable {
                 colors: [Color(hex: "d3d3d3")]
             )
         )
-
     ]
+}
+
+struct VideoTemplate: Identifiable {
+    let id: UUID
+    var title: String
+    var category: String
+    var duration: String
+    var thumbnailURL: String
+
+    var script: String
+    var avatar: Avatar
+    var voice: Voice
+    var background: Background
 }
 
 

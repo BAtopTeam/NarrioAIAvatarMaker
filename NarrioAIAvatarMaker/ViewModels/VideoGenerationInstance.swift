@@ -87,7 +87,7 @@ final class VideoGenerationInstance: ObservableObject, Identifiable {
     
     func startPolling(taskId: String) {
         pollingTimer?.invalidate()
-        pollingTimer = Timer.scheduledTimer(withTimeInterval: 3, repeats: true) { [weak self] _ in
+        pollingTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             Task { await self?.pollStatus(taskId: taskId) }
         }
     }
@@ -142,6 +142,19 @@ final class VideoGenerationInstance: ObservableObject, Identifiable {
         case ..<0.85: return .renderingVideo
         default: return .finalizing
         }
+    }
+    
+    func retry() {
+        cancel()
+
+        progress = 0
+        currentStep = .analyzing
+        remainingSeconds = 180
+        isComplete = false
+        errorMessage = nil
+        videoURL = nil
+
+        startGeneration()
     }
     
     func cancel() {
