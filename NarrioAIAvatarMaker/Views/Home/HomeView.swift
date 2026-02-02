@@ -114,7 +114,15 @@ struct HomeView: View {
     // MARK: - Templates Section
     private var templatesSection: some View {
         VStack(spacing: AppSpacing.lg) {
-            SectionHeader(title: "Quick Start Templates")
+            HStack {
+                SectionHeader(title: "Quick Start Templates")
+                
+                if appState.templates.isEmpty {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: AppColors.primary))
+                        .scaleEffect(0.8)
+                }
+            }
             
             LazyVGrid(columns: [
                 GridItem(.flexible(), spacing: AppSpacing.md),
