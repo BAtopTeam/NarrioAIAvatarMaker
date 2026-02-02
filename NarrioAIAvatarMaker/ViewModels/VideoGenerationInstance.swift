@@ -101,7 +101,7 @@ final class VideoGenerationInstance: ObservableObject, Identifiable {
                 pollingTimer?.invalidate()
                 isComplete = true
                 if !appState.showRatingView {
-                    appState.showRatingView = true
+                    appState.tryShowRatingIfNeeded()
                 }
                 progress = 1.0
                 let result = try await appState.fetchTaskResult(taskId: taskId)

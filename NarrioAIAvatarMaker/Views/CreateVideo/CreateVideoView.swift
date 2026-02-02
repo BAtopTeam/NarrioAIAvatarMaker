@@ -73,4 +73,3 @@ struct CreateVideoView: View {
         }
     }
 }
-

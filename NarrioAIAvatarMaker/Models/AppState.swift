@@ -23,6 +23,8 @@ class AppState: ObservableObject {
     @Published var selectedAvatar: Avatar? = nil
     @Published var showRatingView = false
     
+    private var didShowRatingThisSession = false
+    
     // MARK: - Avatars
     @Published var customAvatars: [Avatar] = []
     @Published var presetAvatars: [Avatar] = []
@@ -92,6 +94,13 @@ class AppState: ObservableObject {
         Task {
             await loadInitialData()
         }
+    }
+    
+    func tryShowRatingIfNeeded() {
+        guard !didShowRatingThisSession else { return }
+
+        didShowRatingThisSession = true
+        showRatingView = true
     }
     
     @MainActor
