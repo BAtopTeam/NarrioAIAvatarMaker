@@ -200,12 +200,12 @@ struct PhotoUploadPlaceholder: View {
                     .cornerRadius(AppRadius.medium)
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, AppSpacing.xxxl)
+            .padding(.vertical, AppSpacing.lg)
             .background(AppColors.cardBackground)
             .cornerRadius(AppRadius.large)
             .overlay(
                 RoundedRectangle(cornerRadius: AppRadius.large)
-                    .stroke(AppColors.primary.opacity(0.3), style: StrokeStyle(lineWidth: 2, dash: [8]))
+                    .stroke(.clear, style: StrokeStyle(lineWidth: 2, dash: [8]))
             )
         }
     }
@@ -253,6 +253,7 @@ struct SelectedPhotoPreview: View {
                 }
             }
         }
+        .frame(maxWidth: .infinity)
         .padding(AppSpacing.lg)
         .background(AppColors.cardBackground)
         .cornerRadius(AppRadius.large)
@@ -321,49 +322,52 @@ struct AIPromptInputView: View {
     }
 }
 
-// MARK: - Processing View
 struct AvatarProcessingView: View {
     let progress: Double
-    
+
     var body: some View {
-        VStack(spacing: AppSpacing.xxl) {
-            Spacer()
-            
-            ZStack {
-                Circle()
-                    .stroke(AppColors.primary.opacity(0.2), lineWidth: 4)
-                    .frame(width: 160, height: 160)
-                
-                Circle()
-                    .trim(from: 0, to: progress)
-                    .stroke(AppColors.primary, style: StrokeStyle(lineWidth: 4, lineCap: .round))
-                    .frame(width: 160, height: 160)
-                    .rotationEffect(.degrees(-90))
-                    .animation(.easeInOut, value: progress)
-                
-                Circle()
-                    .fill(AppColors.primary.opacity(0.1))
-                    .frame(width: 140, height: 140)
-                
-                Image(systemName: "person.crop.circle")
-                    .font(.system(size: 60))
-                    .foregroundColor(AppColors.primary)
+        ZStack {
+            VStack(spacing: AppSpacing.xxl) {
+                Spacer()
+
+                ZStack {
+                    Circle()
+                        .stroke(AppColors.primary.opacity(0.2), lineWidth: 4)
+                        .frame(width: 160, height: 160)
+
+                    Circle()
+                        .trim(from: 0, to: progress)
+                        .stroke(AppColors.primary, style: StrokeStyle(lineWidth: 4, lineCap: .round))
+                        .frame(width: 160, height: 160)
+                        .rotationEffect(.degrees(-90))
+                        .animation(.easeInOut, value: progress)
+
+                    Circle()
+                        .fill(AppColors.primary.opacity(0.1))
+                        .frame(width: 140, height: 140)
+
+                    Image(systemName: "person.crop.circle")
+                        .font(.system(size: 60))
+                        .foregroundColor(AppColors.primary)
+                }
+
+                VStack(spacing: AppSpacing.sm) {
+                    Text("Processing Your Avatar")
+                        .font(AppTypography.title2)
+                        .foregroundColor(AppColors.textPrimary)
+
+                    Text("Our AI is creating your custom avatar...")
+                        .font(AppTypography.subheadline)
+                        .foregroundColor(AppColors.textSecondary)
+                }
+
+                Spacer()
             }
-            
-            VStack(spacing: AppSpacing.sm) {
-                Text("Processing Your Avatar")
-                    .font(AppTypography.title2)
-                    .foregroundColor(AppColors.textPrimary)
-                
-                Text("Our AI is creating your custom avatar...")
-                    .font(AppTypography.subheadline)
-                    .foregroundColor(AppColors.textSecondary)
-            }
-            
-            Spacer()
+            .padding(.horizontal, 0) 
         }
     }
 }
+
 
 // MARK: - Completion View
 struct AvatarCompletionView: View {
@@ -373,33 +377,41 @@ struct AvatarCompletionView: View {
     let creationMode: AvatarCreationMode
     let onSave: () -> Void
     let onCreateAnother: () -> Void
+    
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    
+    private var isSmallScreen: Bool {
+        horizontalSizeClass == .compact && verticalSizeClass == .regular && UIScreen.main.bounds.width <= 375
+    }
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: AppSpacing.xxl) {
-                successIcon
-
-                successMessage
-
-                avatarPreview
-
-                whatsNextSection
-
-                actionButtons
-            }
-            .padding(.vertical, AppSpacing.lg)
-            .padding(.horizontal, AppSpacing.lg)
+        VStack(spacing: AppSpacing.xxl) {
+            successIcon
+                .padding(.top, AppSpacing.lg)
+            
+            successMessage
+            
+            avatarPreview
+                .padding(.horizontal, AppSpacing.lg)
+            
+            whatsNextSection
+                .padding(.horizontal, AppSpacing.lg)
+            Spacer()
+            actionButtons
         }
+        .frame(maxHeight: .infinity)
+        .background(AppColors.mainGradient)
     }
 
     private var successIcon: some View {
         ZStack {
             Circle()
                 .fill(AppColors.primary)
-                .frame(width: 80, height: 80)
+                .frame(width: isSmallScreen ? 40 : 80, height: isSmallScreen ? 40 : 80)
 
             Image(systemName: "checkmark")
-                .font(.system(size: 40, weight: .bold))
+                .font(.system(size: isSmallScreen ? 20 : 40, weight: .bold))
                 .foregroundColor(.white)
         }
         .frame(maxWidth: .infinity)
@@ -419,27 +431,25 @@ struct AvatarCompletionView: View {
     }
 
     private var avatarPreview: some View {
-        VStack(spacing: AppSpacing.md) {
+        HStack(spacing: AppSpacing.md) {
             if let avatar = createdAvatar, let imageData = avatar.localImageData,
                let uiImage = UIImage(data: imageData) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 120, height: 120)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(AppColors.primary, lineWidth: 3))
+                    .frame(width: isSmallScreen ? 48 : 96, height: isSmallScreen ? 48 : 96)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
             } else if let imageData = selectedImageData,
                       let uiImage = UIImage(data: imageData) {
                 Image(uiImage: uiImage)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 120, height: 120)
-                    .clipShape(Circle())
-                    .overlay(Circle().stroke(AppColors.primary, lineWidth: 3))
+                    .frame(width: isSmallScreen ? 48 : 96, height: isSmallScreen ? 48 : 96)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
             } else {
                 Circle()
                     .fill(AppColors.primary.opacity(0.2))
-                    .frame(width: 100, height: 100)
+                    .frame(width: isSmallScreen ? 48 : 96, height: isSmallScreen ? 48 : 96)
                     .overlay(
                         Text(avatarName.isEmpty ? "AV" : String(avatarName.prefix(2)).uppercased())
                             .font(.title.bold())
@@ -447,11 +457,11 @@ struct AvatarCompletionView: View {
                     )
             }
 
-            VStack(spacing: 4) {
+            VStack(alignment: .leading) {
                 Text(createdAvatar?.name ?? (avatarName.isEmpty ? "Custom Avatar" : avatarName))
                     .font(AppTypography.headline)
                     .foregroundColor(AppColors.textPrimary)
-
+                Spacer()
                 Text(creationMode == .aiPrompt ? "AI Generated" : "Photo Avatar")
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundColor(AppColors.primary)
@@ -460,8 +470,11 @@ struct AvatarCompletionView: View {
                     .background(AppColors.primary.opacity(0.1))
                     .cornerRadius(4)
             }
+            .frame(height: isSmallScreen ? 48 : 96)
+            
+            Spacer()
         }
-        .padding(AppSpacing.xxl)
+        .padding(isSmallScreen ? AppSpacing.sm : AppSpacing.lg)
         .background(AppColors.cardBackground)
         .cornerRadius(AppRadius.large)
         .frame(maxWidth: .infinity)
@@ -479,15 +492,22 @@ struct AvatarCompletionView: View {
                 NextStepRow(text: "Switch between avatars in the Create flow")
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .frame(maxWidth: .infinity)
+        .padding(isSmallScreen ? AppSpacing.sm : AppSpacing.lg)
+        .background(AppColors.cardBackground)
+        .cornerRadius(AppRadius.large)
     }
 
     private var actionButtons: some View {
         VStack(spacing: AppSpacing.md) {
             PrimaryButton(title: "Save") { onSave() }
+                .padding(.top, isSmallScreen ? AppSpacing.sm : AppSpacing.lg)
+                .padding(.horizontal, AppSpacing.lg)
 
             SecondaryButton(title: "Create Another Avatar") { onCreateAnother() }
+                .padding(.horizontal, AppSpacing.lg)
         }
-        .padding(.bottom, AppSpacing.xxl)
+        .frame(maxWidth: .infinity)
+        .background(AppColors.cardBackground)
     }
 }

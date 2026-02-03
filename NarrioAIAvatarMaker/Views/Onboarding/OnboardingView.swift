@@ -164,13 +164,13 @@ struct OnboardingPagesView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            TabView(selection: $currentPage) {
+            ZStack {
                 ForEach(Array(pages.enumerated()), id: \.offset) { index, page in
                     OnboardingPageContent(page: page)
-                        .tag(index)
+                        .opacity(currentPage == index ? 1 : 0)
+                        .animation(.easeInOut, value: currentPage)
                 }
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
             
             VStack(spacing: 14) {
                 PrimaryButton(title: "Continue") {
@@ -424,9 +424,6 @@ struct FeedbackPreview: View {
         VStack(spacing: verticalSizeClass == .compact ? 8 : 16) {
             if isSmallScreen {
                 Image(.highest)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxHeight: verticalSizeClass == .compact ? 100 : 180)
                 
                 Image(.lisaM)
                     .resizable()

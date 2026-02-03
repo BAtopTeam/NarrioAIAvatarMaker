@@ -122,6 +122,7 @@ struct BackgroundSelectionView: View {
         VStack {
             PrimaryButton(
                 title: viewModel.currentStep.nextButtonTitle,
+                icon: "arrow.right",
                 disabled: !viewModel.canProceed
             ) {
                 viewModel.nextStep()

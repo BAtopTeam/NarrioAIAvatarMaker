@@ -59,13 +59,15 @@ struct ProjectDetailView: View {
         }
         .sheet(isPresented: $showBottomSheetType, content: {
             bottomSheetOverlay
-                .presentationDetents([.height(300)])
+                .presentationDetents([.height(220)])
                 .presentationDragIndicator(.visible)
                 .background(AppColors.cardBackground)
         })
         .background(AppColors.background)
         .navigationTitle("Project")
         .navigationBarTitleDisplayMode(.inline)
+        .toolbarBackground(Color.white, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
@@ -80,7 +82,7 @@ struct ProjectDetailView: View {
             RateAppView()
         })
         .onAppear(perform: {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                 if appState.showRatingView {
                     showRateApp = true
                     appState.showRatingView = false
@@ -299,11 +301,11 @@ struct ProjectDetailView: View {
                             Spacer()
                         }
                         .frame(maxWidth: .infinity)
-                        .background(Color(hex: "346AEA").opacity(0.1))
+                        .background(.clear)
                         .cornerRadius(12)
                         .overlay(
                             RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color(hex: "346AEA").opacity(0.3), lineWidth: 1)
+                                .stroke(Color(hex: "E0E2FF"), lineWidth: 1)
                         )
                     }
                 }

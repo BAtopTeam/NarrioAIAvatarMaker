@@ -32,12 +32,13 @@ struct AvatarSelectionView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            AvatarNavigationExtension(
+                viewModel: viewModel,
+                appState: _appState,
+                showOnlyCustom: $showOnlyCustom
+            )
             ScrollView {
                 VStack(spacing: AppSpacing.lg) {
-                    headerSection
-                    
-                    filterSection
-                    
                     avatarCountSection
                     
                     avatarContent
@@ -100,16 +101,8 @@ struct AvatarSelectionView: View {
                     }
                     
                     Chip(
-                        title: "My Custom",
-                        icon: "🎨",
-                        isSelected: showOnlyCustom
-                    ) {
-                        showOnlyCustom = true
-                    }
-                    
-                    Chip(
                         title: "Female",
-                        icon: "👩",
+                        iconResource: .fem,
                         isSelected: viewModel.avatarGenderFilter == .female
                     ) {
                         showOnlyCustom = false
@@ -118,7 +111,7 @@ struct AvatarSelectionView: View {
                     
                     Chip(
                         title: "Male",
-                        icon: "👨",
+                        iconResource: .male,
                         isSelected: viewModel.avatarGenderFilter == .male
                     ) {
                         showOnlyCustom = false
@@ -237,6 +230,7 @@ struct AvatarSelectionView: View {
         VStack {
             PrimaryButton(
                 title: viewModel.currentStep.nextButtonTitle,
+                icon: "arrow.right",
                 disabled: !viewModel.canProceed
             ) {
                 viewModel.nextStep()
@@ -323,7 +317,7 @@ struct SelectableAvatarCard: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(avatar.name)
                     .font(.subheadline)
-                    .fontWeight(.semibold)
+                    .fontWeight(.regular)
                     .foregroundColor(isSelected ? Color.white : .black)
                     .lineLimit(nil)
                     .fixedSize(horizontal: false, vertical: true)
@@ -365,5 +359,86 @@ struct RoundedCorner: Shape {
             byRoundingCorners: corners,
             cornerRadii: CGSize(width: radius, height: radius)
         ).cgPath)
+    }
+}
+
+struct AvatarNavigationExtension: View {
+    @ObservedObject var viewModel: CreateVideoViewModel
+    @EnvironmentObject var appState: AppState
+    @Binding var showOnlyCustom: Bool
+
+    var body: some View {
+        VStack(spacing: AppSpacing.md) {
+            HStack {
+                Text("Choose Avatar")
+                    .font(AppTypography.headline)
+                    .foregroundColor(AppColors.textPrimary)
+
+                Spacer()
+
+                if appState.isLoadingAvatars {
+                    ProgressView()
+                        .scaleEffect(0.8)
+                } else {
+                    Button {
+                        Task { await appState.fetchPresetAvatars() }
+                    } label: {
+                        Image(systemName: "arrow.clockwise")
+                            .foregroundColor(AppColors.primary)
+                    }
+                }
+            }
+            
+            VStack(spacing: AppSpacing.sm) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: AppSpacing.sm) {
+                        Chip(
+                            title: "All Avatars",
+                            icon: "✨",
+                            isSelected: !showOnlyCustom && viewModel.avatarGenderFilter == nil
+                        ) {
+                            showOnlyCustom = false
+                            viewModel.avatarGenderFilter = nil
+                        }
+
+                        Chip(
+                            title: "Female",
+                            iconResource: .fem,
+                            isSelected: viewModel.avatarGenderFilter == .female
+                        ) {
+                            showOnlyCustom = false
+                            viewModel.avatarGenderFilter = .female
+                        }
+                        
+                        Chip(
+                            title: "Male",
+                            iconResource: .male,
+                            isSelected: viewModel.avatarGenderFilter == .male
+                        ) {
+                            showOnlyCustom = false
+                            viewModel.avatarGenderFilter = .male
+                        }
+                    }
+                }
+
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: AppSpacing.sm) {
+                        ForEach(AvatarStyle.allCases, id: \.self) { style in
+                            Chip(
+                                title: style.rawValue,
+                                isSelected: viewModel.avatarStyleFilter == style
+                            ) {
+                                viewModel.avatarStyleFilter = style
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, AppSpacing.lg)
+        .padding(.top, AppSpacing.sm)
+        .padding(.bottom, AppSpacing.md)
+        .background(.white)
+        .overlay(Divider(), alignment: .bottom)
     }
 }

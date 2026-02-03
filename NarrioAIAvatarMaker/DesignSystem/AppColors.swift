@@ -19,6 +19,7 @@ struct AppColors {
     
     // MARK: - Background Colors
     static let background = Color(hex: "F8F9FA")
+    static let filterBackground = Color(hex: "EDEEFC")
     static let cardBackground = Color.white
     static let paywallBackground = Color(hex: "F2F2F2")
     static let statBackground = Color(hex: "346AEA")

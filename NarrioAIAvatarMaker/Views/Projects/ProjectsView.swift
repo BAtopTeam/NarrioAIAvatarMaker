@@ -87,7 +87,11 @@ struct ProjectsView: View {
                         } else {
                             LazyVStack(spacing: AppSpacing.lg) {
                                 ForEach(filteredProjects) { project in
-                                    NavigationLink(destination: ProjectDetailView(project: project)) {
+                                    if project.status == .ready || project.status == .failed {
+                                        NavigationLink(destination: ProjectDetailView(project: project)) {
+                                            ProjectCard(project: project)
+                                        }
+                                    } else {
                                         ProjectCard(project: project)
                                     }
                                 }
@@ -100,6 +104,8 @@ struct ProjectsView: View {
                 }
                 .navigationTitle("Projects")
                 .navigationBarTitleDisplayMode(.inline)
+                .toolbarBackground(Color.white, for: .navigationBar) 
+                .toolbarBackground(.visible, for: .navigationBar)
             }
         }
         .onTapGesture {

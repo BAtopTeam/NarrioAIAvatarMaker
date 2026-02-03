@@ -23,10 +23,6 @@ struct VoiceSelectionView: View {
                     SearchBar(text: $voiceVM.searchText, placeholder: "Search voices...")
                         .padding(.horizontal, AppSpacing.lg)
                     
-                    languageFilter
-                    
-                    voiceCount
-                    
                     voiceContent
                     
                     errorSection
@@ -208,6 +204,7 @@ struct VoiceSelectionView: View {
         VStack {
             PrimaryButton(
                 title: viewModel.currentStep.nextButtonTitle,
+                icon: "arrow.right",
                 disabled: !viewModel.canProceed
             ) {
                 viewModel.nextStep()

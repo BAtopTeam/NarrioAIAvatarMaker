@@ -14,10 +14,14 @@ struct CreateAvatarView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                StepIndicator(totalSteps: 3, currentStep: viewModel.currentStep.rawValue)
-                    .padding(.horizontal, AppSpacing.xxl)
-                    .padding(.top, AppSpacing.lg)
-                    .padding(.bottom, AppSpacing.lg)
+                CustomNavigationBar(
+                    title: viewModel.currentStep == .complete ? "Name" : "Create",
+                    currentStep: viewModel.currentStep.rawValue,
+                    totalSteps: 3,
+                    onBack: {
+                        viewModel.handleBack(dismiss: dismiss)
+                    }
+                )
                 
                 Group {
                     switch viewModel.currentStep {
@@ -50,18 +54,8 @@ struct CreateAvatarView: View {
                 }
             }
             .preferredColorScheme(.light)
-            .background(AppColors.background)
-            .navigationTitle("Create")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { viewModel.handleBack(dismiss: dismiss) }) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(AppColors.textPrimary)
-                    }
-                }
-            }
+            .background(AppColors.cardBackground)
+            .navigationBarHidden(true)
             .overlay(
                 Group {
                     if viewModel.showNameInput {
@@ -163,6 +157,7 @@ struct CreateAvatarView: View {
             }
             .padding(.horizontal, AppSpacing.lg)
         }
+        .background(AppColors.mainGradient)
     }
     
     // MARK: - Photos Upload / AI Prompt View
@@ -176,7 +171,9 @@ struct CreateAvatarView: View {
                 }
             }
             .padding(.horizontal, AppSpacing.lg)
+            Spacer(minLength: 24)
         }
+        .background(AppColors.mainGradient)
     }
     
     private var photoUploadContent: some View {
@@ -211,6 +208,7 @@ struct CreateAvatarView: View {
                     GuidelineRow(text: "Plain background preferred")
                 }
             }
+            .frame(maxWidth: .infinity)
             .padding(AppSpacing.lg)
             .background(AppColors.cardBackground)
             .cornerRadius(AppRadius.large)

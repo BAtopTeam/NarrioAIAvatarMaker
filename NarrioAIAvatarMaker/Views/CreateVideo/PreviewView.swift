@@ -212,7 +212,7 @@ struct PreviewView: View {
                     icon: "speaker.wave.2",
                     imageData: nil,
                     title: "Voice",
-                    value: viewModel.selectedVoice?.name ?? "Not selected",
+                    value: viewModel.selectedVoice?.normalName ?? "Not selected",
                     subtitle: viewModel.selectedVoice?.subtitle,
                     showEdit: true
                 ) {

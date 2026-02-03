@@ -103,7 +103,11 @@ struct HomeView: View {
             
             VStack(spacing: AppSpacing.md) {
                 ForEach(appState.recentVideos) { project in
-                    NavigationLink(destination: ProjectDetailView(project: project)) {
+                    if project.status == .ready || project.status == .failed {
+                        NavigationLink(destination: ProjectDetailView(project: project)) {
+                            RecentVideoCard(project: project)
+                        }
+                    } else {
                         RecentVideoCard(project: project)
                     }
                 }

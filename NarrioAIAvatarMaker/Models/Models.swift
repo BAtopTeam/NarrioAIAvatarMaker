@@ -189,12 +189,12 @@ enum VoiceTone: String, Codable, CaseIterable {
     case educational = "Educational"
     case casual = "Casual"
     
-    var icon: String {
+    var icon: ImageResource {
         switch self {
-        case .professional: return "💼"
-        case .friendly: return "😊"
-        case .educational: return "🎓"
-        case .casual: return "🔥"
+        case .professional: return .professional
+        case .friendly: return .friendly
+        case .educational: return .educ
+        case .casual: return .casual
         }
     }
     
@@ -575,10 +575,10 @@ enum CreateVideoStep: Int, CaseIterable {
     
     var nextButtonTitle: String {
         switch self {
-        case .script: return "Next: Choose Avatar"
-        case .avatar: return "Next: Customize Voice"
-        case .voice: return "Next: Choose Background"
-        case .background: return "Next: Preview Video"
+        case .script: return "Next"
+        case .avatar: return "Next"
+        case .voice: return "Next"
+        case .background: return "Next"
         case .preview: return "Generate Video"
         }
     }

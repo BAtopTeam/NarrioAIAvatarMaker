@@ -23,12 +23,12 @@ struct PrimaryButton: View {
                         .progressViewStyle(CircularProgressViewStyle(tint: .white))
                         .scaleEffect(0.9)
                 } else {
+                    Text(title)
+                        .font(AppTypography.buttonLarge)
                     if let icon = icon {
                         Image(systemName: icon)
                             .font(.system(size: 16, weight: .semibold))
                     }
-                    Text(title)
-                        .font(AppTypography.buttonLarge)
                 }
             }
             .foregroundColor(.white)
@@ -152,6 +152,7 @@ struct AvatarImage: View {
 struct Chip: View {
     let title: String
     var icon: String? = nil
+    var iconResource: ImageResource? = nil
     var isSelected: Bool = false
     var action: (() -> Void)? = nil
     
@@ -162,6 +163,11 @@ struct Chip: View {
                     Text(icon)
                         .font(.system(size: 12))
                 }
+                if let imageResource = iconResource {
+                    Image(imageResource)
+                        .renderingMode(.template)
+                        .foregroundStyle(isSelected ? .white : Color(hex: "007AFF"))
+                }
                 Text(title)
                     .font(AppTypography.caption1)
                     .fontWeight(.medium)
@@ -169,7 +175,7 @@ struct Chip: View {
             .foregroundColor(isSelected ? .white : AppColors.textSecondary)
             .padding(.horizontal, 12)
             .padding(.vertical, 6)
-            .background(isSelected ? AppColors.primary : AppColors.background)
+            .background(isSelected ? AppColors.primary : AppColors.filterBackground)
             .cornerRadius(AppRadius.full)
         }
         .disabled(action == nil)

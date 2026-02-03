@@ -17,13 +17,12 @@ struct CreateVideoView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                StepIndicator(
+                CustomNavigationBar(
+                    title: "Create Video",
+                    currentStep: viewModel.currentStep.rawValue,
                     totalSteps: CreateVideoStep.allCases.count,
-                    currentStep: viewModel.currentStep.rawValue
+                    onBack: handleBack
                 )
-                .padding(.horizontal, AppSpacing.xxl)
-                .padding(.top, AppSpacing.lg)
-                .padding(.bottom, AppSpacing.lg)
                 
                 Group {
                     switch viewModel.currentStep {
@@ -47,18 +46,8 @@ struct CreateVideoView: View {
             .onTapGesture {
                 UIApplication.shared.hideKeyboard()
             }
+            .navigationBarHidden(true)
             .background(AppColors.background)
-            .navigationTitle("Create Video")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: handleBack) {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(AppColors.textPrimary)
-                    }
-                }
-            }
         }
     }
     
@@ -71,5 +60,48 @@ struct CreateVideoView: View {
                 viewModel.previousStep()
             }
         }
+    }
+}
+
+struct CustomNavigationBar: View {
+    let title: String
+    let currentStep: Int
+    let totalSteps: Int
+    let onBack: () -> Void
+
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Button(action: onBack) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(AppColors.textPrimary)
+                }
+
+                Spacer()
+
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(AppColors.textPrimary)
+
+                Spacer()
+
+                Color.clear
+                    .frame(width: 24)
+            }
+            .frame(height: 44)
+
+            StepIndicator(
+                totalSteps: totalSteps,
+                currentStep: currentStep
+            )
+        }
+        .padding(.horizontal, AppSpacing.xxl)
+        .padding(.vertical, 16)
+        .background(.white)
+        .overlay(
+            Divider(),
+            alignment: .bottom
+        )
     }
 }

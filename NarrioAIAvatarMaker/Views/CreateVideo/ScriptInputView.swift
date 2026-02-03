@@ -160,6 +160,7 @@ struct ScriptInputView: View {
         VStack {
             PrimaryButton(
                 title: viewModel.currentStep.nextButtonTitle,
+                icon: "arrow.right",
                 disabled: !viewModel.canProceed
             ) {
                 viewModel.nextStep()
@@ -179,8 +180,7 @@ struct VoiceToneCard: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 8) {
-                Text(tone.icon)
-                    .font(.title2)
+                Image(tone.icon)
                 
                 Text(tone.rawValue)
                     .font(AppTypography.subheadline)
