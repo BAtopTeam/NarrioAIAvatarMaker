@@ -157,7 +157,7 @@ struct BackgroundCard: View {
                 .cornerRadius(AppRadius.medium)
                 .overlay(
                     RoundedRectangle(cornerRadius: AppRadius.medium)
-                        .stroke(isSelected ? AppColors.primary : Color.clear, lineWidth: 3)
+                        .stroke(isSelected ? AppColors.primary : Color(hex: "E0E2FF"), lineWidth: 3)
                 )
                 .overlay(
                     Group {

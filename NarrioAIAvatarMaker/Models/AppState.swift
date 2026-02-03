@@ -16,6 +16,7 @@ import StoreKit
 class AppState: ObservableObject {
     // MARK: - Published Properties
     @Published var hasCompletedOnboarding: Bool = false
+    @Published var generationsCount: Int = 0
     @Published var currentUser: User = .mock
     @Published var selectedTab: TabItem = .home
     @Published var isShowingVideoGeneration = false
@@ -166,6 +167,8 @@ class AppState: ObservableObject {
 
         self.hasCompletedOnboarding =
             UserDefaults.standard.bool(forKey: StorageKeys.hasCompletedOnboarding)
+        self.generationsCount =
+            UserDefaults.standard.integer(forKey: StorageKeys.generationCount)
     }
     
     private func persistProjects() {
@@ -323,6 +326,11 @@ class AppState: ObservableObject {
         }
         UserDefaults.standard.set(true, forKey: StorageKeys.hasCompletedOnboarding)
     }
+    
+    func incrementGenerationCount() {
+        generationsCount += 1
+        UserDefaults.standard.set(generationsCount, forKey: StorageKeys.generationCount)
+    }
 
     func fetchTaskResult(taskId: String) async throws -> VideoResultData {
         let data = try await downloadTaskResult(taskId: taskId)
@@ -458,6 +466,7 @@ private enum StorageKeys {
     static let projects = "projects"
     static let customAvatars = "customAvatars"
     static let hasCompletedOnboarding = "hasCompletedOnboarding"
+    static let generationCount = "generationCount"
 }
 
 @MainActor

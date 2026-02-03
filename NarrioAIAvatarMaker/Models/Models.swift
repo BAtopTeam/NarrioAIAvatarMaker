@@ -239,9 +239,9 @@ struct Background: Identifiable, Hashable {
         Background(id: UUID(), name: "Fresh Mint", type: .gradient, colors: [Color(hex: "4facfe"), Color(hex: "00f2fe")], imageURL: nil),
         Background(id: UUID(), name: "Warm Fire", type: .gradient, colors: [Color(hex: "fa709a"), Color(hex: "fee140")], imageURL: nil),
         Background(id: UUID(), name: "Pure White", type: .solid, colors: [.white], imageURL: nil),
-        Background(id: UUID(), name: "Soft Gray", type: .solid, colors: [Color(hex: "f5f5f5")], imageURL: nil),
-        Background(id: UUID(), name: "Deep Dark", type: .solid, colors: [Color(hex: "1a1a2e")], imageURL: nil),
-        Background(id: UUID(), name: "Navy", type: .solid, colors: [Color(hex: "0a1628")], imageURL: nil),
+        Background(id: UUID(), name: "Soft Gray", type: .solid, colors: [Color(hex: "F3F4F6")], imageURL: nil),
+        Background(id: UUID(), name: "Deep Dark", type: .solid, colors: [Color(hex: "1F2937")], imageURL: nil),
+        Background(id: UUID(), name: "Navy", type: .solid, colors: [Color(hex: "1E3A8A")], imageURL: nil),
     ]
 }
 

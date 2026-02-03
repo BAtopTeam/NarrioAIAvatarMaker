@@ -10,6 +10,8 @@ struct CreateAvatarView: View {
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var appState: AppState
     @StateObject private var viewModel = CreateAvatarViewModel()
+    @State var showPaywall = false
+    @StateObject private var subManager = SubscriptionManager.shared
     
     var body: some View {
         NavigationStack {
@@ -52,6 +54,9 @@ struct CreateAvatarView: View {
                 if viewModel.currentStep != .processing && viewModel.currentStep != .complete {
                     bottomButtons
                 }
+            }
+            .fullScreenCover(isPresented: $showPaywall) {
+                PaywallView()
             }
             .preferredColorScheme(.light)
             .background(AppColors.cardBackground)
@@ -249,7 +254,7 @@ struct CreateAvatarView: View {
     private var bottomButtons: some View {
         VStack(spacing: AppSpacing.md) {
             if viewModel.currentStep == .gender {
-                PrimaryButton(title: viewModel.creationMode == .photo ? "Next: Upload Photo" : "Next: Describe Avatar") {
+                PrimaryButton(title: "Next") {
                     viewModel.currentStep = .photos
                 }
             } else if viewModel.currentStep == .photos {
@@ -257,7 +262,11 @@ struct CreateAvatarView: View {
                     title: "Create Avatar",
                     disabled: !viewModel.canProceedToProcessing
                 ) {
-                    viewModel.startProcessing(appState: appState)
+                    if subManager.isSubscribed {
+                        viewModel.startProcessing(appState: appState)
+                    } else {
+                        showPaywall = true
+                    }
                 }
             }
         }

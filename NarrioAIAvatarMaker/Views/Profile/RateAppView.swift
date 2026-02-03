@@ -44,7 +44,9 @@ struct RateAppView: View {
                     }
                     
                     Button(action: {
-                        appState.requestReview()
+                        if let url = URL(string: "https://apps.apple.com/app/id6758341620?action=write-review") {
+                            UIApplication.shared.open(url)
+                        }
                     }) {
                         Text("Rate now")
                             .font(AppTypography.buttonLarge)

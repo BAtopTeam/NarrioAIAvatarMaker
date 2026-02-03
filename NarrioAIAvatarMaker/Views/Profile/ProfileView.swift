@@ -121,7 +121,9 @@ struct ProfileView: View {
                     icon: "star",
                     title: "Rate App"
                 ) {
-                    appState.requestReview()
+                    if let url = URL(string: "https://apps.apple.com/app/id6758341620?action=write-review") {
+                        UIApplication.shared.open(url)
+                    }
                 }
                 
                 Divider().padding(.leading, 50)

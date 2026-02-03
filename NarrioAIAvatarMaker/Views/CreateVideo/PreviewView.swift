@@ -5,6 +5,11 @@
 
 import SwiftUI
 
+enum GenerationPermission {
+    case allowed
+    case showPaywall
+}
+
 struct PreviewView: View {
     @ObservedObject var viewModel: CreateVideoViewModel
     @EnvironmentObject var appState: AppState
@@ -35,20 +40,30 @@ struct PreviewView: View {
                     title: "Generate Video",
                     icon: "play.fill"
                 ) {
-                    if subManager.isSubscribed {
-                        //                        videoGenerationVM.configure(appState: appState, state: viewModel.toCreateVideoState())
-                        //                        videoGenerationVM.startGeneration()
+                    let permission = subManager.generationPermission(
+                        generationsCount: appState.generationsCount,
+                        isSubscribed: subManager.isSubscribed,
+                        plan: subManager.currentSubscriptionType()
+                    )
+
+                    switch permission {
+                    case .allowed:
                         let stateCopy = viewModel.toCreateVideoState()
-                        
+
                         let instance = videoGenerationManager.startNewGeneration(
                             state: stateCopy,
                             appState: appState
                         )
-                        
-                        _ = appState.createProject(from: stateCopy, taskId: nil, videoResult: nil)
-                        
+
+                        _ = appState.createProject(
+                            from: stateCopy,
+                            taskId: nil,
+                            videoResult: nil
+                        )
+
                         currentGeneration = instance
-                    } else {
+                        appState.incrementGenerationCount()
+                    case .showPaywall:
                         showPaywall = true
                     }
                 }

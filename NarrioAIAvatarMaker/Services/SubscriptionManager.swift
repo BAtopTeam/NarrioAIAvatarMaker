@@ -10,6 +10,14 @@ import StoreKit
 internal import Combine
 import ApphudSDK
 
+enum SubscriptionType {
+    case weekly
+    case monthly
+    case yearly
+    case unknown
+}
+
+
 @MainActor
 final class SubscriptionManager: ObservableObject {
     static let shared = SubscriptionManager()
@@ -78,6 +86,28 @@ final class SubscriptionManager: ObservableObject {
                     print("❌ No paywall was found.")
                 }
             }
+        }
+    }
+    
+    func currentSubscriptionType() -> SubscriptionType? {
+        guard let activeSubscription = Apphud.subscriptions()?
+            .first(where: { $0.isActive() }),
+              let product = products
+            .first(where: { $0.productId == activeSubscription.productId }),
+              let period = product.skProduct?.subscriptionPeriod
+        else {
+            return nil
+        }
+
+        switch period.unit {
+        case .week:
+            return .weekly
+        case .month:
+            return .monthly
+        case .year:
+            return .yearly
+        default:
+            return .unknown
         }
     }
 
@@ -163,6 +193,28 @@ final class SubscriptionManager: ObservableObject {
         case .month: return period.numberOfUnits == 1 ? "Monthly" : "\(period.numberOfUnits) months"
         case .year: return period.numberOfUnits == 1 ? "Annual" : "\(period.numberOfUnits) years"
         @unknown default: return "Unknown"
+        }
+    }
+    
+    func generationPermission(
+        generationsCount: Int,
+        isSubscribed: Bool,
+        plan: SubscriptionType?
+    ) -> GenerationPermission {
+
+        if !isSubscribed {
+            return generationsCount == 0 ? .allowed : .showPaywall
+        }
+
+        switch plan {
+        case .weekly:
+            return generationsCount < 10 ? .allowed : .showPaywall
+
+        case .yearly:
+            return .allowed
+
+        default:
+            return .showPaywall
         }
     }
 }
