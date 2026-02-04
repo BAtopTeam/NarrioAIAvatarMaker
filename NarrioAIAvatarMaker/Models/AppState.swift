@@ -195,7 +195,7 @@ class AppState: ObservableObject {
         apiError = nil
         do {
             let voices = try await apiService.getAllVoices()
-            self.apiVoices = voices.map { Voice.fromHeyGen($0) }
+            self.apiVoices = voices.filter { $0.previewAudio != nil && !($0.previewAudio?.isEmpty ?? false) }.map { Voice.fromHeyGen($0) }
         } catch {
             apiError = error.localizedDescription
             print("[AppState] Failed to fetch voices: \(error)")

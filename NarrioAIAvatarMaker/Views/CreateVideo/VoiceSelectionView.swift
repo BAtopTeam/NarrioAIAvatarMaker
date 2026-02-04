@@ -167,10 +167,15 @@ struct VoiceSelectionView: View {
             isPlaying: voiceVM.currentlyPlayingVoiceId == voice.id,
             action: { viewModel.selectedVoice = voice },
             onPlayToggle: {
-                if voice.hasPreview {
-                    voiceVM.togglePlayback(for: voice)
-                } else {
+                guard voice.hasPreview else {
                     alertMessage = "Preview not available for this voice."
+                    showNoPreviewAlert = true
+                    return
+                }
+                
+                voiceVM.togglePlayback(for: voice)
+                voiceVM.errorVoice = { error in
+                    alertMessage = error
                     showNoPreviewAlert = true
                 }
             }

@@ -15,9 +15,37 @@ class VoiceSelectionViewModel: NSObject, ObservableObject {
     @Published var isPlayingPreview = false
     @Published var currentlyPlayingVoiceId: String?
     private var player: AVPlayer?
+    var errorVoice: ((String) -> Void)?
 
     // MARK: - Private Properties
     private var audioPlayer: AVAudioPlayer?
+    
+    override func observeValue(forKeyPath keyPath: String?,
+                               of object: Any?,
+                               change: [NSKeyValueChangeKey : Any]?,
+                               context: UnsafeMutableRawPointer?) {
+
+        guard keyPath == "status",
+              let item = object as? AVPlayerItem else { return }
+
+        switch item.status {
+
+        case .readyToPlay:
+            print("✅ Audio ready")
+
+        case .failed:
+            print("❌ Audio failed:", item.error?.localizedDescription ?? "unknown")
+            errorVoice?(item.error?.localizedDescription ?? "unknown")
+            isPlayingPreview = false
+            currentlyPlayingVoiceId = nil
+
+        case .unknown:
+            print("⚠️ Audio unknown")
+
+        @unknown default:
+            break
+        }
+    }
     
     // MARK: - Computed Filters
     func filteredVoices(from appState: AppState) -> [Voice] {
@@ -84,6 +112,12 @@ class VoiceSelectionViewModel: NSObject, ObservableObject {
         }
 
         let item = AVPlayerItem(url: url)
+
+        item.addObserver(self,
+                         forKeyPath: "status",
+                         options: [.new, .initial],
+                         context: nil)
+
         let newPlayer = AVPlayer(playerItem: item)
         player = newPlayer
 
@@ -92,16 +126,14 @@ class VoiceSelectionViewModel: NSObject, ObservableObject {
             object: item,
             queue: .main
         ) { [weak self] _ in
-            guard let self else { return }
-            currentlyPlayingVoiceId = nil
-            isPlayingPreview = false
+            self?.currentlyPlayingVoiceId = nil
+            self?.isPlayingPreview = false
         }
 
         newPlayer.play()
         currentlyPlayingVoiceId = voice.id
         isPlayingPreview = true
     }
-
     func stopPlayback() {
         player?.pause()
         player = nil
