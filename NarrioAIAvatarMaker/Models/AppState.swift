@@ -215,7 +215,7 @@ class AppState: ObservableObject {
             throw APIError.serverError("Avatar does not have a HeyGen ID")
         }
         
-        let backgroundColor = background?.colors.first.map { colorToHex($0) }
+        let backgroundColor = background?.colors?.first.map { colorToHex($0) }
         
         let request = VideoFromPresetsRequest(
             width: dimensions.width,
@@ -230,8 +230,8 @@ class AppState: ObservableObject {
             emotion: .friendly,
             locale: voice.languageCode,
             backgroundColor: backgroundColor,
-            backgroundImage: nil,
-            backgroundImageName: nil
+            backgroundImage: background?.imageData(),
+            backgroundImageName: "background.jpg"
         )
         
         let taskId = try await apiService.createVideoFromPreset(request: request)
@@ -247,7 +247,7 @@ class AppState: ObservableObject {
         background: Background? = nil,
         dimensions: VideoDimensions = .landscape
     ) async throws -> String {
-        let backgroundColor = background?.colors.first.map { colorToHex($0) }
+        let backgroundColor = background?.colors?.first.map { colorToHex($0) }
         
         let request = VideoFromImagesRequest(
             width: dimensions.width,
@@ -263,8 +263,8 @@ class AppState: ObservableObject {
             emotion: .friendly,
             locale: voice.languageCode,
             backgroundColor: backgroundColor,
-            backgroundImage: nil,
-            backgroundImageName: nil
+            backgroundImage: background?.imageData(),
+            backgroundImageName: "background.jpg"
         )
         
         let taskId = try await apiService.createVideoFromImage(request: request)
@@ -384,7 +384,7 @@ class AppState: ObservableObject {
         if let url = videoURL {
             updatedProject.videoURL = url
         }
-
+        incrementGenerationCount()
         projects[index] = updatedProject
         removeSavedTask(currentProjectId: projectId)
         recentVideos = Array(projects.prefix(3))

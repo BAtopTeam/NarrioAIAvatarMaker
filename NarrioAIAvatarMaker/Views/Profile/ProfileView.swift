@@ -86,10 +86,6 @@ struct ProfileView: View {
                     Text(appState.currentUser.subscription.displayName)
                         .font(AppTypography.headline)
                         .foregroundColor(AppColors.textPrimary)
-                    
-                    Text("Create up to \(appState.currentUser.subscription.videosPerMonth == .max ? "unlimited" : "\(appState.currentUser.subscription.videosPerMonth)") videos per month")
-                        .font(AppTypography.caption1)
-                        .foregroundColor(AppColors.textSecondary)
                 }
                 
                 Spacer()

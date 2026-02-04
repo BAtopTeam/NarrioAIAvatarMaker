@@ -62,7 +62,6 @@ struct PreviewView: View {
                         )
 
                         currentGeneration = instance
-                        appState.incrementGenerationCount()
                     case .showPaywall:
                         showPaywall = true
                     }
@@ -85,12 +84,16 @@ struct PreviewView: View {
             if let background = viewModel.selectedBackground {
                 if background.type == .gradient {
                     LinearGradient(
-                        colors: background.colors,
+                        colors: background.colors ?? [],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
+                } else if background.type == .image {
+                    Image(background.imageName ?? "")
+                        .resizable()
+                        .scaledToFill()
                 } else {
-                    background.colors.first ?? Color.white
+                    background.colors?.first ?? Color.white
                 }
             } else {
                 AppColors.primary.opacity(0.2)

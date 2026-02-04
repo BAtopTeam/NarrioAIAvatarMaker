@@ -165,6 +165,7 @@ final class SubscriptionManager: ObservableObject {
     // MARK: - Check Subscription Status
     func checkSubscriptionStatus() {
         isSubscribed = Apphud.hasActiveSubscription()
+        loadProducts()
         print("🔍 SubscriptionManager: Current sub status: \(isSubscribed)")
     }
     

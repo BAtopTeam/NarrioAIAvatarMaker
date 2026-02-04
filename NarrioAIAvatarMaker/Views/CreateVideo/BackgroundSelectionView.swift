@@ -102,12 +102,16 @@ struct BackgroundSelectionView: View {
                 ZStack {
                     if selectedBackground.type == .gradient {
                         LinearGradient(
-                            colors: selectedBackground.colors,
+                            colors: selectedBackground.colors ?? [],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
+                    } else if selectedBackground.type == .image  {
+                        Image(selectedBackground.imageName ?? "")
+                            .resizable()
+                            .scaledToFill()
                     } else {
-                        selectedBackground.colors.first ?? Color.white
+                        selectedBackground.colors?.first ?? Color.white
                     }
                 }
                 .frame(height: 200)
@@ -145,12 +149,16 @@ struct BackgroundCard: View {
                 ZStack {
                     if background.type == .gradient {
                         LinearGradient(
-                            colors: background.colors,
+                            colors: background.colors ?? [],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
+                    } else if background.type == .image {
+                        Image(background.imageName ?? "")
+                            .resizable()
+                            .scaledToFill()
                     } else {
-                        background.colors.first ?? Color.white
+                        background.colors?.first ?? Color.white
                     }
                 }
                 .frame(width: 70, height: 70)

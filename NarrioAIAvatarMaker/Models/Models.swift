@@ -230,8 +230,18 @@ struct Background: Identifiable, Hashable {
     let id: UUID
     var name: String
     var type: BackgroundType
-    var colors: [Color]
+    var colors: [Color]?
     var imageURL: String?
+    var imageName: String?
+    
+    func imageData() -> Data? {
+        guard
+            let imageName,
+            let uiImage = UIImage(named: imageName)
+        else { return nil }
+        
+        return uiImage.jpegData(compressionQuality: 0.9)
+    }
     
     static let backgrounds: [Background] = [
         Background(id: UUID(), name: "Ocean Blue", type: .gradient, colors: [Color(hex: "667eea"), Color(hex: "764ba2")], imageURL: nil),
@@ -242,6 +252,75 @@ struct Background: Identifiable, Hashable {
         Background(id: UUID(), name: "Soft Gray", type: .solid, colors: [Color(hex: "F3F4F6")], imageURL: nil),
         Background(id: UUID(), name: "Deep Dark", type: .solid, colors: [Color(hex: "1F2937")], imageURL: nil),
         Background(id: UUID(), name: "Navy", type: .solid, colors: [Color(hex: "1E3A8A")], imageURL: nil),
+        Background(
+            id: UUID(),
+            name: "Background 1",
+            type: .image,
+            imageName: "firstBackgroundImage"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 2",
+            type: .image,
+            imageName: "secondBack"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 3",
+            type: .image,
+            imageName: "thirdBack"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 4",
+            type: .image,
+            imageName: "fourthBack"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 5",
+            type: .image,
+            imageName: "fifthBack"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 6",
+            type: .image,
+            imageName: "sixthBack"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 7",
+            type: .image,
+            imageName: "seventhBack"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 8",
+            type: .image,
+            imageName: "the8thBack"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 9",
+            type: .image,
+            imageName: "ninthBack"
+        ),
+
+        Background(
+            id: UUID(),
+            name: "Background 10",
+            type: .image,
+            imageName: "tenthBack"
+        )
     ]
 }
 
@@ -249,6 +328,7 @@ enum BackgroundType: String, CaseIterable {
     case all = "All"
     case gradient = "Gradients"
     case solid = "Solid"
+    case image = "Image"
 }
 
 // MARK: - Project/Video Model
